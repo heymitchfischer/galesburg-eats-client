@@ -20,22 +20,8 @@
                 dark
                 flat
               >
-                <v-toolbar-title>Login form</v-toolbar-title>
+                <v-toolbar-title>Login</v-toolbar-title>
                 <v-spacer></v-spacer>
-                <v-tooltip bottom>
-                  <template v-slot:activator="{ on }">
-                    <v-btn
-                      :href="source"
-                      icon
-                      large
-                      target="_blank"
-                      v-on="on"
-                    >
-                      <v-icon>mdi-code-tags</v-icon>
-                    </v-btn>
-                  </template>
-                  <span>Source</span>
-                </v-tooltip>
               </v-toolbar>
               <v-card-text>
                 <v-form>
@@ -44,6 +30,7 @@
                     name="login"
                     prepend-icon="mdi-account"
                     type="text"
+                    v-model="signInForm.email"
                   ></v-text-field>
 
                   <v-text-field
@@ -52,12 +39,13 @@
                     name="password"
                     prepend-icon="mdi-lock"
                     type="password"
+                    v-model="signInForm.password"
                   ></v-text-field>
                 </v-form>
               </v-card-text>
               <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn color="primary" v-on:click="signOut">Login</v-btn>
+                <v-btn color="primary" v-on:click="signIn">Sign In</v-btn>
               </v-card-actions>
             </v-card>
           </v-col>
@@ -72,12 +60,33 @@
     props: {
       source: String,
     },
-    mounted: function() {
-      this.$store.dispatch('signIn');
+
+    data: function() {
+      return {
+        signInForm: {
+          email: "",
+          password: ""
+        }
+      }
     },
+
+    mounted: function() {
+      this.$store.dispatch('validateCookie').then( () => {
+        if (this.$store.state.auth) {
+          this.$router.push({ name: 'Home' });
+        }
+      });
+    },
+
     methods: {
-      signOut() {
-        this.$store.dispatch('signOut');
+      signIn() {
+        this.$store.dispatch('signIn', {
+          email: this.signInForm.email,
+          password: this.signInForm.password
+        }).then( () => {
+          this.$store.dispatch('storeCookie');
+          this.$router.push({ name: 'Home' });
+        });
       }
     }
   }

@@ -5,34 +5,42 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
+    auth: null,
     user: {
-      email: null,
-      auth: null
+      id: null,
+      email: null
     }
   },
   mutations: {
     updateUser(state, payload) {
       state.user = {
-        email: payload.email,
-        auth: payload.auth
+        id: payload.id,
+        email: payload.email
       }
+    },
+
+    setAuth(state, payload) {
+      state.auth = payload.auth
     }
   },
   actions: {
-    async signIn({ commit }) {
+    async signIn({ commit }, payload) {
       const response = await fetch('http://localhost:3000/users/sign_in', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'Jwt-Auth': 'user_web_client'
         },
-        body: JSON.stringify({ user: { email: 'mitchfischer6@gmail.com', password: 'password' } })
+        body: JSON.stringify({ user: { email: payload.email, password: payload.password } })
       });
 
-      const auth = await response.headers.get('Authorization');
-      const result = await response.json();
+      if (await response.status === 201) {
+        const auth = response.headers.get('Authorization');
+        const result = await response.json();
 
-      commit('updateUser', { email: result.email, auth: auth });
+        commit('updateUser', { id: result.id, email: result.email });
+        commit('setAuth', { auth: auth });
+      }
     },
 
     async signOut({ commit, state }) {
@@ -40,13 +48,70 @@ export default new Vuex.Store({
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': state.user.auth
+          'Authorization': state.auth,
+          'Jwt-Auth': 'user_web_client'
         }
       });
 
       if (await response.status === 204) {
-        commit('updateUser', { email: null, auth: null });
+        commit('updateUser', { id: null, email: null });
+        commit('setAuth', { auth: null });
       }
+    },
+
+    async test({ state }) {
+      const response = await fetch('http://localhost:3000/test', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Jwt-Auth': 'user_web_client',
+          'Authorization': state.auth
+        }
+      });
+
+      console.log(await response);
+    },
+
+    async storeCookie({ state }) {
+      fetch('http://localhost:3000/store_cookie', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Jwt-Auth': 'user_web_client',
+          'Authorization': state.auth
+        },
+        credentials: 'include'
+      });
+    },
+
+    async validateCookie({ commit }) {
+      const response = await fetch('http://localhost:3000/validate_cookie', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Jwt-Auth': 'user_web_client'
+        },
+        credentials: 'include'
+      });
+
+      if (await response.status === 201) {
+        const auth = response.headers.get('Authorization');
+        const result = await response.json();
+
+        commit('updateUser', { id: result.id, email: result.email });
+        commit('setAuth', { auth: auth });
+      }
+    },
+
+    async removeCookie() {
+      fetch('http://localhost:3000/remove_cookie', {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          'Jwt-Auth': 'user_web_client',
+        },
+        credentials: 'include'
+      });
     }
   },
   modules: {

@@ -2,12 +2,13 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 import Auth from '../views/Auth.vue'
+import store from '../store'
 
 Vue.use(VueRouter)
 
 const routes = [
   {
-    path: '/',
+    path: '/:slug?',
     name: 'Home',
     component: Home
   },
@@ -32,16 +33,17 @@ const router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
   console.log(to, from);
-  if(to.path === '/sign_in') { next(); }
 
-  // If user is logged in, go to next path
-  let loggedIn = false;
-  if(loggedIn) {
+  if (to.path === '/sign_in') {
+    if (store.state.auth) {
+      next({ name: 'Home' });
+    } else {
+      next();
+    }
+  } else if (store.state.auth) {
     next();
-
-  // else redirect to sign in path
   } else {
-    next({ path: '/sign_in' });
+    next({ name: 'Sign In' });
   }
 })
 
