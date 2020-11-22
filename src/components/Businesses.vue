@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="businesses">
     <v-card elevation="4" class="ma-6" v-for="business in businesses" :key="business.id" v-on:click="moveToBusiness(business)">
       <v-row>
         <v-col cols="12" sm="4" align-self="center">

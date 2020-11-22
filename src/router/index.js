@@ -2,20 +2,26 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 import Auth from '../views/Auth.vue'
+import Orders from '../views/Orders.vue'
 import store from '../store'
 
 Vue.use(VueRouter)
 
 const routes = [
   {
-    path: '/:slug?',
-    name: 'Home',
-    component: Home
+    path: '/orders',
+    name: 'Orders',
+    component: Orders
   },
   {
     path: '/sign_in',
     name: 'Sign In',
     component: Auth
+  },
+  {
+    path: '/:slug?',
+    name: 'Home',
+    component: Home
   }
   // {
   //   path: '/sign_in',
@@ -28,12 +34,11 @@ const routes = [
 ]
 
 const router = new VueRouter({
+  mode: 'history',
   routes
 })
 
 router.beforeEach((to, from, next) => {
-  console.log(to, from);
-
   if (to.path === '/sign_in') {
     if (store.state.auth) {
       next({ name: 'Home' });

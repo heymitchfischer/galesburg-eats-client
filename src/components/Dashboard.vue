@@ -6,16 +6,7 @@
       clipped
       right
     >
-      <v-list dense>
-        <v-list-item @click.stop="right = !right">
-          <v-list-item-action>
-            <v-icon>mdi-exit-to-app</v-icon>
-          </v-list-item-action>
-          <v-list-item-content>
-            <v-list-item-title>Open Temporary Drawer</v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
-      </v-list>
+      <Cart/>
     </v-navigation-drawer>
 
     <v-app-bar
@@ -24,7 +15,6 @@
       color="blue-grey"
       dark
     >
-      <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
       <v-toolbar-title>Toolbar</v-toolbar-title>
       <v-spacer></v-spacer>
       <v-btn color="primary" v-on:click="test">Test</v-btn>
@@ -32,36 +22,23 @@
       <v-app-bar-nav-icon @click.stop="drawerRight = !drawerRight"></v-app-bar-nav-icon>
     </v-app-bar>
 
-    <v-navigation-drawer
-      v-model="drawer"
-      app
-    >
-      <v-list dense>
-        <v-list-item @click.stop="left = !left">
-          <v-list-item-action>
-            <v-icon>mdi-exit-to-app</v-icon>
-          </v-list-item-action>
-          <v-list-item-content>
-            <v-list-item-title>Open Temporary Drawer</v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
-      </v-list>
-    </v-navigation-drawer>
-
-    <v-navigation-drawer
-      v-model="left"
-      fixed
-      temporary
-    ></v-navigation-drawer>
-
     <v-main>
-      <v-container class="fill-height" fluid>
-        <v-row justify="center" align="center">
-          <Businesses :businesses="businesses" v-show="!businessSelected"/>
-          <div v-show="businessSelected">
-            <v-btn color="primary" v-on:click="unselectBusiness">Back</v-btn>
-            <Business :business="business"/>
-          </div>
+      <v-container fluid>
+        <v-row>
+          <v-col cols="12">
+            <transition name="fade">
+              <Businesses :businesses="businesses" v-show="!businessSelected"/>
+            </transition>
+
+            <transition name="fade">
+              <div v-show="businessSelected">
+                <v-btn color="primary" class="float-left" v-on:click="unselectBusiness">
+                  <v-icon>mdi-arrow-left</v-icon>
+                </v-btn>
+                <Business :business="business"/>
+              </div>
+            </transition>
+          </v-col>
         </v-row>
       </v-container>
     </v-main>
@@ -85,9 +62,19 @@
   </v-app>
 </template>
 
+<style scoped>
+  .fade-enter-active, .fade-leave-active {
+    transition: opacity .5s;
+  }
+  .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+    opacity: 0;
+  }
+</style>
+
 <script>
   import Businesses from '@/components/Businesses.vue';
   import Business from '@/components/Business.vue'
+  import Cart from '@/components/Cart.vue'
 
   export default {
     props: {
@@ -95,17 +82,16 @@
     },
 
     data: () => ({
-      drawer: null,
       drawerRight: null,
       right: false,
-      left: false,
       businesses: [],
       business: {}
     }),
 
     components: {
       Businesses,
-      Business
+      Business,
+      Cart
     },
 
     mounted: async function() {
@@ -138,7 +124,7 @@
 
         if (await response.status === 200) {
           const result = await response.json();
-          return result.businesses;
+          return result;
         }
       },
 
@@ -152,18 +138,22 @@
 
         if (await response.status === 200) {
           const result = await response.json();
-          return result.business;
+          console.log(result);
+          return result;
         }
       },
 
       unselectBusiness: function() {
+        this.$router.push({ name: 'Home' });
         this.business = {};
       }
     },
 
     watch: {
       async $route(to) {
-        this.business = await this.getBusiness(to.params.slug);
+        if (to.params.slug) {
+          this.business = await this.getBusiness(to.params.slug);
+        }
       }
     },
 

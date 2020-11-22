@@ -9,6 +9,9 @@ export default new Vuex.Store({
     user: {
       id: null,
       email: null
+    },
+    cart: {
+      items: []
     }
   },
   mutations: {
@@ -21,6 +24,11 @@ export default new Vuex.Store({
 
     setAuth(state, payload) {
       state.auth = payload.auth
+    },
+
+    updateCart(state, payload) {
+      console.log(payload.items);
+      state.cart.items = payload.items;
     }
   },
   actions: {
@@ -112,7 +120,73 @@ export default new Vuex.Store({
         },
         credentials: 'include'
       });
-    }
+    },
+
+    async addItemToCart({ commit, state }, payload) {
+      const response = await fetch('http://localhost:3000/carted_items', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Jwt-Auth': 'user_web_client',
+          'Authorization': state.auth
+        },
+        body: JSON.stringify({ menu_item_id: payload.item.id })
+      });
+
+      if (await response.status === 201) {
+        const result = await response.json();
+        commit('updateCart', { items: result });
+      }
+    },
+
+    async getItemsInCart({ commit, state }) {
+      const response = await fetch('http://localhost:3000/carted_items', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Jwt-Auth': 'user_web_client',
+          'Authorization': state.auth
+        }
+      });
+
+      if (await response.status === 200) {
+        const result = await response.json();
+        commit('updateCart', { items: result });
+      }
+    },
+
+    async removeItemFromCart({ commit, state }, payload) {
+      const response = await fetch(`http://localhost:3000/carted_items/${payload.item.id}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          'Jwt-Auth': 'user_web_client',
+          'Authorization': state.auth
+        }
+      });
+
+      if (await response.status === 200) {
+        const result = await response.json();
+        commit('updateCart', { items: result });
+      }
+    },
+
+    async checkout({ state }) {
+      const response = await fetch(`http://localhost:3000/orders`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Jwt-Auth': 'user_web_client',
+          'Authorization': state.auth
+        }
+      });
+
+      if (await response.status === 201) {
+        const result = await response.json();
+        console.log(result);
+        // commit('updateCart', { items: result });
+      }
+    },
   },
   modules: {
   }

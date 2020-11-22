@@ -71,6 +71,7 @@
     },
 
     mounted: function() {
+      console.log(this.$route);
       this.$store.dispatch('validateCookie').then( () => {
         if (this.$store.state.auth) {
           this.$router.push({ name: 'Home' });
