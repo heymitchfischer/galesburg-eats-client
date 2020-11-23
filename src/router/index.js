@@ -1,9 +1,11 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Home from '../views/Home.vue'
+// import Home from '../views/Home.vue'
 import Auth from '../views/Auth.vue'
 import Orders from '../views/Orders.vue'
-import store from '../store'
+import Business from '../views/Business.vue'
+import Businesses from '../views/Businesses.vue'
+// import store from '../store'
 
 Vue.use(VueRouter)
 
@@ -19,10 +21,15 @@ const routes = [
     component: Auth
   },
   {
-    path: '/:slug?',
-    name: 'Home',
-    component: Home
-  }
+    path: '/',
+    name: 'Businesses',
+    component: Businesses
+  },
+  {
+    path: '/:slug',
+    name: 'Business',
+    component: Business
+  },
   // {
   //   path: '/sign_in',
   //   name: 'Sign In',
@@ -38,18 +45,18 @@ const router = new VueRouter({
   routes
 })
 
-router.beforeEach((to, from, next) => {
-  if (to.path === '/sign_in') {
-    if (store.state.auth) {
-      next({ name: 'Home' });
-    } else {
-      next();
-    }
-  } else if (store.state.auth) {
-    next();
-  } else {
-    next({ name: 'Sign In' });
-  }
-})
+// router.beforeEach((to, from, next) => {
+//   if (to.path === '/sign_in') {
+//     if (store.state.auth) {
+//       next({ name: 'Businesses' });
+//     } else {
+//       next();
+//     }
+//   } else if (store.state.auth) {
+//     next();
+//   } else {
+//     next({ name: 'Sign In' });
+//   }
+// })
 
 export default router;

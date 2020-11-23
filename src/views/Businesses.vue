@@ -24,14 +24,40 @@
 </template>
 
 <script>
+  import Dashboard from '../layouts/Dashboard.vue';
+
   export default {
-    props: {
-      businesses: Array
+    name: 'Businesses',
+
+    data: () => ({
+      businesses: []
+    }),
+
+    created() {
+      this.$emit('update:layout', Dashboard);
+    },
+
+    mounted: async function() {
+      this.businesses = await this.getBusinesses();
     },
 
     methods: {
       moveToBusiness: async function(business) {
         this.$router.push({ path: `/${business.slug}` });
+      },
+
+      getBusinesses: async function() {
+        const response = await fetch('http://localhost:3000/businesses', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
+
+        if (await response.status === 200) {
+          const result = await response.json();
+          return result;
+        }
       }
     }
   }

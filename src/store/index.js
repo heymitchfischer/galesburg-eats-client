@@ -151,6 +151,7 @@ export default new Vuex.Store({
 
       if (await response.status === 200) {
         const result = await response.json();
+        console.log(result);
         commit('updateCart', { items: result });
       }
     },

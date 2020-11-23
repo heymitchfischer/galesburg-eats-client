@@ -14,9 +14,6 @@
 
 <script>
   export default {
-    mounted: function() {
-      this.$store.dispatch('getItemsInCart');
-    },
     computed: {
       itemsInCart: function() {
         return this.$store.state.cart.items;

@@ -70,14 +70,13 @@
       }
     },
 
-    mounted: function() {
-      console.log(this.$route);
-      this.$store.dispatch('validateCookie').then( () => {
-        if (this.$store.state.auth) {
-          this.$router.push({ name: 'Home' });
-        }
-      });
-    },
+    // mounted: function() {
+    //   this.$store.dispatch('validateCookie').then( () => {
+    //     if (this.$store.state.auth) {
+    //       this.$router.push({ name: 'Businesses' });
+    //     }
+    //   });
+    // },
 
     methods: {
       signIn() {
@@ -86,7 +85,7 @@
           password: this.signInForm.password
         }).then( () => {
           this.$store.dispatch('storeCookie');
-          this.$router.push({ name: 'Home' });
+          this.$router.push({ name: 'Businesses' });
         });
       }
     }
