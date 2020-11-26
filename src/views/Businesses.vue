@@ -2,9 +2,11 @@
   <div class="businesses">
     <v-card elevation="4" class="ma-6" v-for="business in businesses" :key="business.id" v-on:click="moveToBusiness(business)">
       <v-row>
-        <v-col cols="12" sm="4" align-self="center">
+        <v-col cols="12" sm="4" class="pa-0" align-self="center">
           <v-img
-            src="https://cdn.vuetifyjs.com/images/cards/cooking.png"
+            height="250px"
+            width="100%"
+            :src="business.image_url"
           ></v-img>
         </v-col>
         <v-col cols="12" sm="8" align-self="center">
@@ -15,13 +17,23 @@
                 {{ business.address }}
               </div>
             </v-row>
-            <div>{{ business.description }}</div>
+            <p class="truncate">{{ business.description }}</p>
           </v-card-text>
         </v-col>
       </v-row>
     </v-card>
   </div>
 </template>
+
+<style scoped>
+  .truncate {
+     overflow: hidden;
+     text-overflow: ellipsis;
+     display: -webkit-box;
+     -webkit-line-clamp: 2; /* number of lines to show */
+     -webkit-box-orient: vertical;
+  }
+</style>
 
 <script>
   import Dashboard from '../layouts/Dashboard.vue';

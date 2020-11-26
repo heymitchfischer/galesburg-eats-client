@@ -27,7 +27,6 @@ export default new Vuex.Store({
     },
 
     updateCart(state, payload) {
-      console.log(payload.items);
       state.cart.items = payload.items;
     }
   },
@@ -48,6 +47,7 @@ export default new Vuex.Store({
 
         commit('updateUser', { id: result.id, email: result.email });
         commit('setAuth', { auth: auth });
+        localStorage.setItem('auth', auth);
       }
     },
 
@@ -64,63 +64,72 @@ export default new Vuex.Store({
       if (await response.status === 204) {
         commit('updateUser', { id: null, email: null });
         commit('setAuth', { auth: null });
+        localStorage.removeItem('auth');
       }
     },
 
-    async test({ state }) {
-      const response = await fetch('http://localhost:3000/test', {
+    async autoSignIn({ commit }) {
+      const auth = localStorage.getItem('auth') || '';
+      const response = await fetch('http://localhost:3000/users/auto_sign_in', {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
-          'Jwt-Auth': 'user_web_client',
-          'Authorization': state.auth
+          'Authorization': auth,
+          'Jwt-Auth': 'user_web_client'
         }
       });
 
-      console.log(await response);
-    },
-
-    async storeCookie({ state }) {
-      fetch('http://localhost:3000/store_cookie', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Jwt-Auth': 'user_web_client',
-          'Authorization': state.auth
-        },
-        credentials: 'include'
-      });
-    },
-
-    async validateCookie({ commit }) {
-      const response = await fetch('http://localhost:3000/validate_cookie', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Jwt-Auth': 'user_web_client'
-        },
-        credentials: 'include'
-      });
-
       if (await response.status === 201) {
-        const auth = response.headers.get('Authorization');
         const result = await response.json();
-
         commit('updateUser', { id: result.id, email: result.email });
         commit('setAuth', { auth: auth });
       }
     },
 
-    async removeCookie() {
-      fetch('http://localhost:3000/remove_cookie', {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-          'Jwt-Auth': 'user_web_client',
-        },
-        credentials: 'include'
-      });
-    },
+    // Leaving these functions in for now as we might want to store the jwt token in
+    // a cookie in the future?
+
+    // async storeCookie({ state }) {
+    //   fetch('http://localhost:3000/store_cookie', {
+    //     method: 'POST',
+    //     headers: {
+    //       'Content-Type': 'application/json',
+    //       'Jwt-Auth': 'user_web_client',
+    //       'Authorization': state.auth
+    //     },
+    //     credentials: 'include'
+    //   });
+    // },
+
+    // async validateCookie({ commit }) {
+    //   const response = await fetch('http://localhost:3000/validate_cookie', {
+    //     method: 'POST',
+    //     headers: {
+    //       'Content-Type': 'application/json',
+    //       'Jwt-Auth': 'user_web_client'
+    //     },
+    //     credentials: 'include'
+    //   });
+
+    //   if (await response.status === 201) {
+    //     const auth = response.headers.get('Authorization');
+    //     const result = await response.json();
+
+    //     commit('updateUser', { id: result.id, email: result.email });
+    //     commit('setAuth', { auth: auth });
+    //   }
+    // },
+
+    // async removeCookie() {
+    //   fetch('http://localhost:3000/remove_cookie', {
+    //     method: 'DELETE',
+    //     headers: {
+    //       'Content-Type': 'application/json',
+    //       'Jwt-Auth': 'user_web_client',
+    //     },
+    //     credentials: 'include'
+    //   });
+    // },
 
     async addItemToCart({ commit, state }, payload) {
       const response = await fetch('http://localhost:3000/carted_items', {
@@ -151,7 +160,6 @@ export default new Vuex.Store({
 
       if (await response.status === 200) {
         const result = await response.json();
-        console.log(result);
         commit('updateCart', { items: result });
       }
     },

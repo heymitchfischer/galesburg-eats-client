@@ -14,12 +14,22 @@
 
     <v-navigation-drawer v-model="drawer" app>
       <v-list dense>
-        <v-list-item>
-          <router-link to="/orders">
-            <v-list-item-content>
-              <v-list-item-title>My Orders</v-list-item-title>
-            </v-list-item-content>
-          </router-link>
+        <v-list-item @click="$router.push('/')">
+          <v-list-item-action>
+            <v-icon>mdi-exit-to-app</v-icon>
+          </v-list-item-action>
+          <v-list-item-content>
+            <v-list-item-title>Restaurants</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+
+        <v-list-item @click="$router.push('/orders')">
+          <v-list-item-action>
+            <v-icon>mdi-exit-to-app</v-icon>
+          </v-list-item-action>
+          <v-list-item-content>
+            <v-list-item-title>My Order History</v-list-item-title>
+          </v-list-item-content>
         </v-list-item>
       </v-list>
     </v-navigation-drawer>
@@ -67,14 +77,8 @@
     methods: {
       signOut: function() {
         this.$store.dispatch('signOut').then(() => {
-          this.$store.dispatch('removeCookie');
           this.$router.push({ name: 'Sign In' });
         });
-      },
-
-      unselectBusiness: function() {
-        this.$router.push({ name: 'Businesses' });
-        // this.business = {};
       }
     },
 

@@ -70,21 +70,13 @@
       }
     },
 
-    // mounted: function() {
-    //   this.$store.dispatch('validateCookie').then( () => {
-    //     if (this.$store.state.auth) {
-    //       this.$router.push({ name: 'Businesses' });
-    //     }
-    //   });
-    // },
-
     methods: {
       signIn() {
         this.$store.dispatch('signIn', {
           email: this.signInForm.email,
           password: this.signInForm.password
         }).then( () => {
-          this.$store.dispatch('storeCookie');
+          this.$store.dispatch('getItemsInCart');
           this.$router.push({ name: 'Businesses' });
         });
       }

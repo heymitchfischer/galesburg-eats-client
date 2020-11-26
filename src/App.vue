@@ -19,13 +19,15 @@
 <script>
   export default {
     name: 'App',
+
     data() {
       return {
         layout: 'div',
       };
     },
+
     created: function() {
-      this.$store.dispatch('validateCookie').then(() => {
+      this.$store.dispatch('autoSignIn').then(() => {
         this.$store.dispatch('getItemsInCart');
       });
     },

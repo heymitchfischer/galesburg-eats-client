@@ -19,6 +19,7 @@
         return this.$store.state.cart.items;
       }
     },
+
     methods: {
       removeFromCart: function(item) {
         this.$store.dispatch('removeItemFromCart', { item: item });

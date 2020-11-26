@@ -1,5 +1,10 @@
 <template>
   <div class="business">
+    <router-link to="/">
+      <v-btn color="primary" class="float-left">
+        <v-icon>mdi-arrow-left</v-icon>
+      </v-btn>
+    </router-link>
     <h2 class="text-center">{{ business.name }}</h2>
     <Menu :menu="selectedMenu"/>
   </div>
@@ -39,7 +44,6 @@
 
         if (await response.status === 200) {
           const result = await response.json();
-          console.log(result);
           return result;
         }
       }
