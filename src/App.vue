@@ -6,10 +6,10 @@
 
     <v-footer
       app
-      color="blue-grey"
+      color="primary"
       class="white--text"
     >
-      <span>Vuetify</span>
+      <span>Main Street Codes</span>
       <v-spacer></v-spacer>
       <span>&copy; {{ new Date().getFullYear() }}</span>
     </v-footer>
@@ -27,8 +27,12 @@
     },
 
     created: function() {
+      if (localStorage.getItem('auth') === null) return;
+
       this.$store.dispatch('autoSignIn').then(() => {
-        this.$store.dispatch('getItemsInCart');
+        if (this.$store.state.auth) {
+          this.$store.dispatch('getItemsInCart');
+        }
       });
     },
   };

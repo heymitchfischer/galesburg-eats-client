@@ -1,27 +1,68 @@
 <template>
   <div class="cart">
-    <h4>Cart</h4>
+    <h4 class="pa-4">Your Order</h4>
+    <v-divider></v-divider>
     <v-list dense>
-      <v-list-item @click="removeFromCart(item)" v-for="item in itemsInCart" :key="item.id">
+      <v-list-item v-for="item in itemsInCart" :key="item.id">
         <v-list-item-content>
           <v-list-item-title>{{ item.menu_item_name }}</v-list-item-title>
+          <v-list-item-subtitle>{{ convertToDollars(item.price) }}</v-list-item-subtitle>
         </v-list-item-content>
+        <!-- <v-list-item-action @click="removeFromCart(item)"> -->
+        <v-list-item-action @click="openRemoveItemDialog(item)">
+          <v-icon>mdi-delete</v-icon>
+        </v-list-item-action>
       </v-list-item>
     </v-list>
-    <v-btn color="primary" @click="checkout">Checkout</v-btn>
+    <v-divider inset></v-divider>
+    <div class="text-right pa-4">
+      <p><strong>Order Total:</strong> {{ orderTotal }}</p>
+    </div>
+    <div class="checkoutBtnContainer">
+      <v-btn color="primary" class="checkoutBtn py-6" @click="checkout">Checkout</v-btn>
+    </div>
+
+    <RemoveItemDialog
+      :open="removeItemDialogOpen"
+      :item="itemBeingRemoved"
+      @input="value => removeItemDialogOpen = value"
+      @remove="removeFromCart"
+    >
+    </RemoveItemDialog>
   </div>
 </template>
 
+<style scoped>
+  .checkoutBtnContainer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    border-bottom: 3px solid white;
+  }
+
+  .checkoutBtn {
+    border-radius: 0;
+    width: 100%;
+  }
+</style>
+
 <script>
+  import RemoveItemDialog from '@/components/RemoveItemDialog.vue'
+
   export default {
-    computed: {
-      itemsInCart: function() {
-        return this.$store.state.cart.items;
-      }
+    data: () => ({
+      removeItemDialogOpen: false,
+      itemBeingRemoved: {}
+    }),
+
+    components: {
+      RemoveItemDialog
     },
 
     methods: {
       removeFromCart: function(item) {
+        this.removeItemDialogOpen = false;
+        this.itemBeingRemoved = {};
         this.$store.dispatch('removeItemFromCart', { item: item });
       },
 
@@ -29,7 +70,32 @@
         this.$store.dispatch('checkout').then(() => {
           this.$store.dispatch('getItemsInCart');
         });
+      },
+
+      convertToDollars: function(price) {
+        return `$${(price/100).toFixed(2)}`;
+      },
+
+      openRemoveItemDialog: function(item) {
+        this.itemBeingRemoved = item;
+        this.removeItemDialogOpen = true;
       }
-    }
+    },
+
+    computed: {
+      itemsInCart: function() {
+        return this.$store.state.cart.items;
+      },
+
+      orderTotal: function() {
+        let total = 0;
+
+        this.itemsInCart.forEach(item => {
+          total += item.price;
+        })
+
+        return this.convertToDollars(total);
+      }
+    },
   }
 </script>

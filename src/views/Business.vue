@@ -1,8 +1,9 @@
 <template>
   <div class="business">
     <router-link to="/">
-      <v-btn color="primary" class="float-left">
-        <v-icon>mdi-arrow-left</v-icon>
+      <v-btn color="primary" class="float-left white--text">
+        <v-icon color="white">mdi-arrow-left</v-icon>
+        Back
       </v-btn>
     </router-link>
     <h2 class="text-center">{{ business.name }}</h2>

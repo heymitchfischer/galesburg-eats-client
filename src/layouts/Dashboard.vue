@@ -4,12 +4,23 @@
       <Cart/>
     </v-navigation-drawer>
 
-    <v-app-bar app clipped-right color="blue-grey" dark>
+    <v-app-bar app clipped-right color="white">
       <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
-      <v-toolbar-title>Toolbar</v-toolbar-title>
+      <v-toolbar-title>Galesburg Eats</v-toolbar-title>
       <v-spacer></v-spacer>
       <v-btn color="primary" v-on:click="signOut">Sign Out</v-btn>
-      <v-app-bar-nav-icon @click.stop="drawerRight = !drawerRight"></v-app-bar-nav-icon>
+      <v-badge
+        :content="amountOfItemsInCart"
+        :value="amountOfItemsInCart"
+        color="primary"
+        offset-x="20"
+        offset-y="20"
+        overlap
+      >
+        <v-app-bar-nav-icon class="ml-4" @click.stop="drawerRight = !drawerRight">
+          <v-icon>mdi-cart</v-icon>
+        </v-app-bar-nav-icon>
+      </v-badge>
     </v-app-bar>
 
     <v-navigation-drawer v-model="drawer" app>
@@ -85,6 +96,10 @@
     computed: {
       businessSelected: function() {
         return Object.keys(this.business).length !== 0;
+      },
+
+      amountOfItemsInCart: function() {
+        return this.$store.state.cart.items.length;
       }
     }
   }

@@ -69,7 +69,7 @@ export default new Vuex.Store({
     },
 
     async autoSignIn({ commit }) {
-      const auth = localStorage.getItem('auth') || '';
+      const auth = localStorage.getItem('auth');
       const response = await fetch('http://localhost:3000/users/auto_sign_in', {
         method: 'GET',
         headers: {
@@ -79,10 +79,13 @@ export default new Vuex.Store({
         }
       });
 
-      if (await response.status === 201) {
-        const result = await response.json();
+      const result = await response.json();
+
+      if (response.ok) {
         commit('updateUser', { id: result.id, email: result.email });
         commit('setAuth', { auth: auth });
+      } else {
+        console.log(result);
       }
     },
 
@@ -146,6 +149,7 @@ export default new Vuex.Store({
         const result = await response.json();
         commit('updateCart', { items: result });
       }
+      console.log(await response.json());
     },
 
     async getItemsInCart({ commit, state }) {
