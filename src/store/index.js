@@ -145,11 +145,13 @@ export default new Vuex.Store({
         body: JSON.stringify({ menu_item_id: payload.item.id })
       });
 
-      if (await response.status === 201) {
-        const result = await response.json();
+      const result = await response.json();
+
+      if (response.ok) {
         commit('updateCart', { items: result });
+      } else {
+        throw result.error;
       }
-      console.log(await response.json());
     },
 
     async getItemsInCart({ commit, state }) {

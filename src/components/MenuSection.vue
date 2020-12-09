@@ -5,7 +5,7 @@
         <h4>{{ menuSection.name }}</h4>
         <v-row>
           <v-col cols="12" sm="6" align-self="center" v-for="menuItem in menuSection.menu_items" :key="menuItem.id">
-            <MenuItem :menuItem="menuItem"/>
+            <MenuItem :menuItem="menuItem" @selectMenuItem="value => $emit('selectMenuItem', value)"/>
           </v-col>
         </v-row>
       </v-col>

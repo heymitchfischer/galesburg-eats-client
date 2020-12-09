@@ -1,6 +1,6 @@
 <template>
   <div class="menuItem">
-    <v-card elevation="4" class="ma-6" v-on:click="addToCart">
+    <v-card elevation="4" class="ma-6" v-on:click="$emit('selectMenuItem', menuItem)">
       <v-row>
         <v-col cols="12" align-self="center">
           <v-card-title>{{ menuItem.name }}</v-card-title>
@@ -16,9 +16,6 @@
       menuItem: Object
     },
     methods: {
-      addToCart: function() {
-        this.$store.dispatch('addItemToCart', { item: this.menuItem });
-      }
     }
   }
 </script>

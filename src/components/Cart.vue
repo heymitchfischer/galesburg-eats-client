@@ -48,6 +48,7 @@
 
 <script>
   import RemoveItemDialog from '@/components/RemoveItemDialog.vue'
+  import { convertToDollars } from '@/misc/helpers.js';
 
   export default {
     data: () => ({
@@ -72,14 +73,12 @@
         });
       },
 
-      convertToDollars: function(price) {
-        return `$${(price/100).toFixed(2)}`;
-      },
-
       openRemoveItemDialog: function(item) {
         this.itemBeingRemoved = item;
         this.removeItemDialogOpen = true;
-      }
+      },
+
+      convertToDollars
     },
 
     computed: {

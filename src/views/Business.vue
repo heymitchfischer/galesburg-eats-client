@@ -1,29 +1,85 @@
 <template>
   <div class="business">
-    <router-link to="/">
-      <v-btn color="primary" class="float-left white--text">
-        <v-icon color="white">mdi-arrow-left</v-icon>
-        Back
-      </v-btn>
-    </router-link>
+    <div class="banner-container">
+      <router-link to="/" class="back-button">
+        <v-btn class="float-left white--text" text>
+          <v-icon color="white">mdi-arrow-left</v-icon>
+          Back
+        </v-btn>
+      </router-link>
+      <img :src="business.image_url" class="elevation-4 banner-image">
+    </div>
     <h2 class="text-center">{{ business.name }}</h2>
-    <Menu :menu="selectedMenu"/>
+    <v-row class="justify-center">
+      <v-col cols="10" sm="6" md="4">
+        <v-select
+          :items="business.menus"
+          v-model="selectedMenu"
+          name="menu"
+          item-text="name"
+          label="Select a menu"
+          dense
+          solo
+          return-object
+        ></v-select>
+      </v-col>
+    </v-row>
+    <Menu :menu="selectedMenu" @selectMenuItem="value => selectedMenuItem = value"/>
+    <AddItemDialog
+      :open="menuItemIsSelected"
+      :item="selectedMenuItem"
+      @input="selectedMenuItem = {}"
+      @add="addSelectedMenuItemToCart"
+    >
+    </AddItemDialog>
   </div>
 </template>
+
+<style scoped>
+  .back-button {
+    position: absolute;
+    top: 5px;
+    left: 5px;
+  }
+
+  .back-button .v-btn:hover::before {
+    opacity: .7;
+    background-color: rgb(23, 119, 210);
+  }
+
+  .back-button button {
+    background-color: rgba(23, 119, 210, 0.6);
+  }
+
+  .banner-container {
+    position: relative;
+  }
+
+  .banner-image {
+    width: 100%;
+    max-height: 280px;
+    object-position: center top;
+    object-fit: cover;
+  }
+</style>
 
 <script>
   import Menu from '@/components/Menu.vue';
   import Dashboard from '../layouts/Dashboard.vue';
+  import AddItemDialog from '@/components/AddItemDialog.vue'
 
   export default {
     name: 'Business',
 
     data: () => ({
-      business: {}
+      business: {},
+      selectedMenuItem: {},
+      selectedMenu: {}
     }),
 
     components: {
-      Menu
+      Menu,
+      AddItemDialog
     },
 
     created() {
@@ -32,6 +88,7 @@
 
     mounted: async function() {
       this.business = await this.getBusiness(this.$route.params.slug);
+      this.selectedMenu = this.business.menus[0];
     },
 
     methods: {
@@ -47,16 +104,20 @@
           const result = await response.json();
           return result;
         }
+      },
+
+      addSelectedMenuItemToCart: function() {
+        console.log(this.selectedMenuItem);
       }
     },
 
     computed: {
-      selectedMenu: function() {
-        if (this.business.menus) {
-          return this.business.menus[0];
+      menuItemIsSelected: function() {
+        if (Object.entries(this.selectedMenuItem).length === 0) {
+          return false;
         }
 
-        return {};
+        return true;
       }
     }
   }
