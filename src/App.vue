@@ -27,13 +27,13 @@
     },
 
     created: function() {
-      if (localStorage.getItem('auth') === null) return;
-
-      this.$store.dispatch('autoSignIn').then(() => {
-        if (this.$store.state.auth) {
+      if (localStorage.getItem('auth') === null) {
+        this.$store.dispatch('getItemsInCart');
+      } else {
+        this.$store.dispatch('autoSignIn').then(() => {
           this.$store.dispatch('getItemsInCart');
-        }
-      });
+        });
+      }
     },
   };
 </script>

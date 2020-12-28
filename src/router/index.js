@@ -21,6 +21,11 @@ const routes = [
     component: Auth
   },
   {
+    path: '/sign_up',
+    name: 'Sign Up',
+    component: Auth
+  },
+  {
     path: '/',
     name: 'Businesses',
     component: Businesses

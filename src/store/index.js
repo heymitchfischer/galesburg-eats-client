@@ -34,6 +34,7 @@ export default new Vuex.Store({
     async signIn({ commit }, payload) {
       const response = await fetch('http://localhost:3000/users/sign_in', {
         method: 'POST',
+        credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
           'Jwt-Auth': 'user_web_client'
@@ -44,6 +45,34 @@ export default new Vuex.Store({
       if (await response.status === 201) {
         const auth = response.headers.get('Authorization');
         const result = await response.json();
+
+        commit('updateUser', { id: result.id, email: result.email });
+        commit('setAuth', { auth: auth });
+        localStorage.setItem('auth', auth);
+      }
+    },
+
+    async signUp({ commit }, payload) {
+      const response = await fetch('http://localhost:3000/users', {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+          'Jwt-Auth': 'user_web_client'
+        },
+        body: JSON.stringify({
+          user: {
+            email: payload.email,
+            password: payload.password,
+            password_confirmation: payload.passwordConfirmation
+          }
+        })
+      });
+
+      if (await response.status === 201) {
+        const auth = response.headers.get('Authorization');
+        const result = await response.json();
+        console.log(result);
 
         commit('updateUser', { id: result.id, email: result.email });
         commit('setAuth', { auth: auth });
@@ -137,6 +166,7 @@ export default new Vuex.Store({
     async addItemToCart({ commit, state }, payload) {
       const response = await fetch('http://localhost:3000/carted_items', {
         method: 'POST',
+        credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
           'Jwt-Auth': 'user_web_client',
@@ -157,6 +187,7 @@ export default new Vuex.Store({
     async getItemsInCart({ commit, state }) {
       const response = await fetch('http://localhost:3000/carted_items', {
         method: 'GET',
+        credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
           'Jwt-Auth': 'user_web_client',
@@ -173,6 +204,7 @@ export default new Vuex.Store({
     async removeItemFromCart({ commit, state }, payload) {
       const response = await fetch(`http://localhost:3000/carted_items/${payload.item.id}`, {
         method: 'DELETE',
+        credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
           'Jwt-Auth': 'user_web_client',
@@ -189,6 +221,7 @@ export default new Vuex.Store({
     async checkout({ state }) {
       const response = await fetch(`http://localhost:3000/orders`, {
         method: 'POST',
+        credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
           'Jwt-Auth': 'user_web_client',
