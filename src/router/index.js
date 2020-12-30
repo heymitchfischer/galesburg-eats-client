@@ -51,17 +51,16 @@ const router = new VueRouter({
 })
 
 // router.beforeEach((to, from, next) => {
-//   if (to.path === '/sign_in') {
-//     if (store.state.auth) {
+//   console.log(store.getters.isLoggedIn);
+//   if (to.name === 'Sign In' || to.name === 'Sign Up') {
+//     if (store.getters.isLoggedIn) {
 //       next({ name: 'Businesses' });
 //     } else {
 //       next();
 //     }
-//   } else if (store.state.auth) {
-//     next();
 //   } else {
-//     next({ name: 'Sign In' });
+//     next();
 //   }
-// })
+// });
 
 export default router;

@@ -42,13 +42,8 @@
     left: 5px;
   }
 
-  .back-button .v-btn:hover::before {
-    opacity: .7;
-    background-color: rgb(23, 119, 210);
-  }
-
   .back-button button {
-    background-color: rgba(23, 119, 210, 0.6);
+    background-color: #FF4632;
   }
 
   .banner-container {

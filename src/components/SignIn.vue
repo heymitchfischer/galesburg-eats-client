@@ -12,9 +12,9 @@
               <v-card-text>
                 <v-form>
                   <v-text-field
-                    label="Login"
-                    name="login"
-                    prepend-icon="mdi-account"
+                    label="Email"
+                    name="email"
+                    prepend-icon="mdi-email"
                     type="text"
                     v-model="signInForm.email"
                   ></v-text-field>
@@ -29,9 +29,13 @@
                   ></v-text-field>
                 </v-form>
               </v-card-text>
-              <v-card-actions>
-                <v-spacer></v-spacer>
+              <v-card-text v-show="errorMessage" class="my-0 text-center red--text">
+                {{ errorMessage }}
+              </v-card-text>
+              <v-card-actions class="justify-center flex-column">
                 <v-btn color="primary" v-on:click="signIn">Sign In</v-btn>
+                <p class="mt-8 mb-0">Don't have an account?</p>
+                <router-link to="/sign_up">Create one here</router-link>
               </v-card-actions>
             </v-card>
           </v-col>
@@ -42,6 +46,8 @@
 </template>
 
 <script>
+  const ERROR_MESSAGE = "Please check your email and password.";
+
   export default {
     props: {
       source: String,
@@ -52,18 +58,24 @@
         signInForm: {
           email: "",
           password: ""
-        }
+        },
+
+        errorMessage: null
       }
     },
 
     methods: {
       signIn() {
+        this.errorMessage = null;
+
         this.$store.dispatch('signIn', {
           email: this.signInForm.email,
           password: this.signInForm.password
         }).then( () => {
           this.$store.dispatch('getItemsInCart');
           this.$router.push({ name: 'Businesses' });
+        }).catch( () => {
+          this.errorMessage = ERROR_MESSAGE;
         });
       }
     }

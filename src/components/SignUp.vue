@@ -11,10 +11,39 @@
               </v-toolbar>
               <v-card-text>
                 <v-form>
+                  <v-row>
+                    <v-col cols="6">
+                      <v-text-field
+                        label="First Name"
+                        name="first-name"
+                        prepend-icon="mdi-account"
+                        type="text"
+                        v-model="signUpForm.firstName"
+                      ></v-text-field>
+                    </v-col>
+
+                    <v-col cols="6">
+                      <v-text-field
+                        label="Last Name"
+                        name="last-name"
+                        type="text"
+                        v-model="signUpForm.lastName"
+                      ></v-text-field>
+                    </v-col>
+                  </v-row>
+
+                  <v-text-field
+                    label="Phone Number"
+                    name="phone-number"
+                    prepend-icon="mdi-phone"
+                    type="text"
+                    v-model="signUpForm.phoneNumber"
+                  ></v-text-field>
+
                   <v-text-field
                     label="Email"
                     name="email"
-                    prepend-icon="mdi-account"
+                    prepend-icon="mdi-email"
                     type="text"
                     v-model="signUpForm.email"
                   ></v-text-field>
@@ -38,9 +67,13 @@
                   ></v-text-field>
                 </v-form>
               </v-card-text>
-              <v-card-actions>
-                <v-spacer></v-spacer>
+              <v-card-text v-show="formattedErrors.length > 0" class="red--text text-center">
+                <p class="my-0" v-for="error in formattedErrors" :key="error">{{ error }}</p>
+              </v-card-text>
+              <v-card-actions class="justify-center flex-column">
                 <v-btn color="primary" v-on:click="signUp">Create Account</v-btn>
+                <p class="mt-8 mb-0">Already have an account?</p>
+                <router-link to="/sign_in">Sign in here</router-link>
               </v-card-actions>
             </v-card>
           </v-col>
@@ -51,6 +84,8 @@
 </template>
 
 <script>
+  import { formatErrors } from '@/misc/helpers.js';
+
   export default {
     props: {
       source: String,
@@ -59,23 +94,41 @@
     data: function() {
       return {
         signUpForm: {
+          firstName: "",
+          lastName: "",
+          phoneNumber: "",
           email: "",
           password: "",
           passwordConfirmation: ""
-        }
+        },
+
+        errors: {}
       }
     },
 
     methods: {
       signUp() {
+        this.errors = {};
+
         this.$store.dispatch('signUp', {
+          firstName: this.signUpForm.firstName,
+          lastName: this.signUpForm.lastName,
+          phoneNumber: this.signUpForm.phoneNumber,
           email: this.signUpForm.email,
           password: this.signUpForm.password,
           passwordConfirmation: this.signUpForm.passwordConfirmation
         }).then( () => {
           this.$store.dispatch('getItemsInCart');
           this.$router.push({ name: 'Businesses' });
+        }).catch( errors => {
+          this.errors = errors;
         });
+      }
+    },
+
+    computed: {
+      formattedErrors: function() {
+        return formatErrors(this.errors);
       }
     }
   }

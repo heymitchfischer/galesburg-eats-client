@@ -8,16 +8,37 @@ export default new Vuex.Store({
     auth: null,
     user: {
       id: null,
+      firstName: null,
+      lastName: null,
+      phoneNumber: null,
       email: null
     },
     cart: {
       items: []
     }
   },
+
+  getters: {
+    isLoggedIn: state => {
+      return state.auth !== null;
+    },
+
+    isLoggedOut: state => {
+      return state.auth === null;
+    },
+
+    currentUser: state => {
+      return state.user;
+    }
+  },
+
   mutations: {
     updateUser(state, payload) {
       state.user = {
         id: payload.id,
+        firstName: payload.first_name,
+        lastName: payload.last_name,
+        phoneNumber: payload.phone_number,
         email: payload.email
       }
     },
@@ -30,6 +51,7 @@ export default new Vuex.Store({
       state.cart.items = payload.items;
     }
   },
+
   actions: {
     async signIn({ commit }, payload) {
       const response = await fetch('http://localhost:3000/users/sign_in', {
@@ -42,13 +64,15 @@ export default new Vuex.Store({
         body: JSON.stringify({ user: { email: payload.email, password: payload.password } })
       });
 
-      if (await response.status === 201) {
-        const auth = response.headers.get('Authorization');
-        const result = await response.json();
+      const result = await response.json();
 
-        commit('updateUser', { id: result.id, email: result.email });
+      if (response.ok) {
+        const auth = response.headers.get('Authorization');
+        commit('updateUser', result);
         commit('setAuth', { auth: auth });
         localStorage.setItem('auth', auth);
+      } else {
+        throw result.error;
       }
     },
 
@@ -62,6 +86,9 @@ export default new Vuex.Store({
         },
         body: JSON.stringify({
           user: {
+            first_name: payload.firstName,
+            last_name: payload.lastName,
+            phone_number: payload.phoneNumber,
             email: payload.email,
             password: payload.password,
             password_confirmation: payload.passwordConfirmation
@@ -69,14 +96,15 @@ export default new Vuex.Store({
         })
       });
 
-      if (await response.status === 201) {
-        const auth = response.headers.get('Authorization');
-        const result = await response.json();
-        console.log(result);
+      const result = await response.json();
 
-        commit('updateUser', { id: result.id, email: result.email });
+      if (response.ok) {
+        const auth = response.headers.get('Authorization');
+        commit('updateUser', result);
         commit('setAuth', { auth: auth });
         localStorage.setItem('auth', auth);
+      } else {
+        throw result.errors;
       }
     },
 
@@ -91,7 +119,7 @@ export default new Vuex.Store({
       });
 
       if (await response.status === 204) {
-        commit('updateUser', { id: null, email: null });
+        commit('updateUser', {});
         commit('setAuth', { auth: null });
         localStorage.removeItem('auth');
       }
@@ -111,10 +139,10 @@ export default new Vuex.Store({
       const result = await response.json();
 
       if (response.ok) {
-        commit('updateUser', { id: result.id, email: result.email });
+        commit('updateUser', result);
         commit('setAuth', { auth: auth });
       } else {
-        console.log(result);
+        localStorage.removeItem('auth');
       }
     },
 

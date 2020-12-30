@@ -8,7 +8,7 @@
       <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
       <v-toolbar-title>Galesburg Eats</v-toolbar-title>
       <v-spacer></v-spacer>
-      <v-btn color="primary" v-on:click="signOut">Sign Out</v-btn>
+      <v-btn color="primary" @click="$router.push('/sign_in')" v-if="$store.getters.isLoggedOut">Sign In</v-btn>
       <v-badge
         :content="amountOfItemsInCart"
         :value="amountOfItemsInCart"
@@ -24,22 +24,62 @@
     </v-app-bar>
 
     <v-navigation-drawer v-model="drawer" app>
+      <div class="greetingContainer py-4 px-4" v-if="$store.getters.isLoggedIn">
+        <h1 class="white--text">Hi, {{ $store.getters.currentUser.firstName }}!</h1>
+      </div>
+
       <v-list dense>
         <v-list-item @click="$router.push('/')">
           <v-list-item-action>
-            <v-icon>mdi-exit-to-app</v-icon>
+            <v-icon>mdi-food-fork-drink</v-icon>
           </v-list-item-action>
           <v-list-item-content>
             <v-list-item-title>Restaurants</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
 
-        <v-list-item @click="$router.push('/orders')">
+        <v-list-item @click="$router.push('/orders')" v-if="$store.getters.isLoggedIn">
+          <v-list-item-action>
+            <v-icon>mdi-receipt</v-icon>
+          </v-list-item-action>
+          <v-list-item-content>
+            <v-list-item-title>Order History</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+
+        <v-list-item @click="$router.push('/')" v-if="$store.getters.isLoggedIn">
+          <v-list-item-action>
+            <v-icon>mdi-account</v-icon>
+          </v-list-item-action>
+          <v-list-item-content>
+            <v-list-item-title>Profile</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+
+        <v-list-item @click="$router.push('/')">
+          <v-list-item-action>
+            <v-icon>mdi-email</v-icon>
+          </v-list-item-action>
+          <v-list-item-content>
+            <v-list-item-title>Contact Us</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+
+        <v-list-item @click="$router.push('/')">
+          <v-list-item-action>
+            <v-icon>mdi-information</v-icon>
+          </v-list-item-action>
+          <v-list-item-content>
+            <v-list-item-title>About</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+
+        <v-list-item @click="signOut" v-if="$store.getters.isLoggedIn">
           <v-list-item-action>
             <v-icon>mdi-exit-to-app</v-icon>
           </v-list-item-action>
           <v-list-item-content>
-            <v-list-item-title>My Order History</v-list-item-title>
+            <v-list-item-title>Sign Out</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
       </v-list>
@@ -61,8 +101,15 @@
   .fade-enter-active, .fade-leave-active {
     transition: opacity .5s;
   }
+
   .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
     opacity: 0;
+  }
+
+  .greetingContainer {
+    width: 100%;
+    border-bottom: 3px solid white;
+    background-color: #FF4632;
   }
 </style>
 
