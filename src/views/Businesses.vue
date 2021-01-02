@@ -1,35 +1,45 @@
 <template>
-  <div class="businesses">
-    <v-hover v-slot="{ hover }" class="ma-6" v-for="business in businesses" :key="business.id">
-      <v-card :elevation="hover ? 12 : 6" v-on:click="moveToBusiness(business)">
-        <v-row>
-          <v-col cols="12" sm="4" class="pa-0" align-self="center">
-            <v-img
-              class="rounded thumbnail-image"
-              height="200px"
-              width="100%"
-              :src="business.image_url"
-              elevation=24
-            ></v-img>
-          </v-col>
-          <v-col cols="12" sm="8" align-self="center">
-            <v-card-title>{{ business.name }}</v-card-title>
-            <v-card-text>
-              <v-row align="center" class="mx-0">
-                <div class="my-4 subtitle-1">
-                  {{ business.address }}
-                </div>
+  <div class="businesses-page">
+    <v-container fluid>
+      <v-row>
+        <v-col cols="12">
+          <v-hover v-slot="{ hover }" class="ma-6" v-for="business in businesses" :key="business.id">
+            <v-card :elevation="hover ? 12 : 6" v-on:click="moveToBusiness(business)">
+              <v-row>
+                <v-col cols="12" sm="4" class="pa-0" align-self="center">
+                  <v-img
+                    class="rounded thumbnail-image"
+                    height="200px"
+                    width="100%"
+                    :src="business.image_url"
+                    elevation=24
+                  ></v-img>
+                </v-col>
+                <v-col cols="12" sm="8" align-self="center">
+                  <v-card-title>{{ business.name }}</v-card-title>
+                  <v-card-text>
+                    <v-row align="center" class="mx-0">
+                      <div class="my-4 subtitle-1">
+                        {{ business.address }}
+                      </div>
+                    </v-row>
+                    <p class="truncate">{{ business.description }}</p>
+                  </v-card-text>
+                </v-col>
               </v-row>
-              <p class="truncate">{{ business.description }}</p>
-            </v-card-text>
-          </v-col>
-        </v-row>
-      </v-card>
-    </v-hover>
+            </v-card>
+          </v-hover>
+        </v-col>
+      </v-row>
+    </v-container>
   </div>
 </template>
 
 <style scoped>
+  .businesses-page {
+    height: 100%;
+  }
+
   .truncate {
      overflow: hidden;
      text-overflow: ellipsis;

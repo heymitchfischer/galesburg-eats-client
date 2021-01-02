@@ -20,3 +20,10 @@ export function formatErrors(errorsArray) {
 
   return errors;
 }
+
+export function formatDateTime(dateString) {
+  let date = new Date(dateString);
+  let options = { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' }
+
+  return date.toLocaleDateString("en-US", options);
+}

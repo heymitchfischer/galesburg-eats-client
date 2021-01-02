@@ -1,49 +1,53 @@
 <template>
-  <div class="business">
-    <div class="banner-container">
-      <router-link to="/" class="back-button">
-        <v-btn class="float-left white--text" text>
-          <v-icon color="white">mdi-arrow-left</v-icon>
-          Back
-        </v-btn>
-      </router-link>
-      <img :src="business.image_url" class="elevation-4 banner-image">
-    </div>
-    <h2 class="text-center">{{ business.name }}</h2>
-    <v-row class="justify-center">
-      <v-col cols="10" sm="6" md="4">
-        <v-select
-          :items="business.menus"
-          v-model="selectedMenu"
-          name="menu"
-          item-text="name"
-          label="Select a menu"
-          dense
-          solo
-          return-object
-        ></v-select>
-      </v-col>
-    </v-row>
-    <Menu :menu="selectedMenu" @selectMenuItem="value => selectedMenuItem = value"/>
-    <AddItemDialog
-      :open="menuItemIsSelected"
-      :item="selectedMenuItem"
-      @input="selectedMenuItem = {}"
-      @add="addSelectedMenuItemToCart"
-    >
-    </AddItemDialog>
+  <div class="business-page">
+    <v-container fluid>
+      <v-row>
+        <v-col cols="12">
+          <router-link to="/" class="back-btn">
+            <v-icon color="primary">mdi-arrow-left</v-icon>
+            View all restaurants
+          </router-link>
+
+          <div class="banner-container mt-4">
+            <img :src="business.image_url" class="elevation-4 banner-image">
+          </div>
+
+          <h2 class="text-center">{{ business.name }}</h2>
+          <v-row class="justify-center">
+            <v-col cols="10" sm="6" md="4">
+              <v-select
+                :items="business.menus"
+                v-model="selectedMenu"
+                name="menu"
+                item-text="name"
+                label="Select a menu"
+                dense
+                solo
+                return-object
+              ></v-select>
+            </v-col>
+          </v-row>
+          <Menu :menu="selectedMenu" @selectMenuItem="value => selectedMenuItem = value"/>
+          <AddItemDialog
+            :open="menuItemIsSelected"
+            :item="selectedMenuItem"
+            @input="selectedMenuItem = {}"
+            @add="addSelectedMenuItemToCart"
+          >
+          </AddItemDialog>
+        </v-col>
+      </v-row>
+    </v-container>
   </div>
 </template>
 
 <style scoped>
-  .back-button {
-    position: absolute;
-    top: 5px;
-    left: 5px;
+  .business-page {
+    height: 100%;
   }
 
-  .back-button button {
-    background-color: #FF4632;
+  .back-btn {
+    text-decoration: none;
   }
 
   .banner-container {

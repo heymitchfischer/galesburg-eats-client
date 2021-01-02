@@ -8,7 +8,6 @@
           <v-list-item-title>{{ item.menu_item_name }}</v-list-item-title>
           <v-list-item-subtitle>{{ convertToDollars(item.price) }}</v-list-item-subtitle>
         </v-list-item-content>
-        <!-- <v-list-item-action @click="removeFromCart(item)"> -->
         <v-list-item-action @click="openRemoveItemDialog(item)">
           <v-icon>mdi-delete</v-icon>
         </v-list-item-action>
@@ -60,6 +59,10 @@
       RemoveItemDialog
     },
 
+    mounted: function() {
+      this.$store.dispatch('getItemsInCart');
+    },
+
     methods: {
       removeFromCart: function(item) {
         this.removeItemDialogOpen = false;
@@ -68,8 +71,11 @@
       },
 
       checkout: function() {
-        this.$store.dispatch('checkout').then(() => {
+        this.$store.dispatch('checkout').then( order => {
+          this.$router.push({ path: `/orders/${order.id}` });
           this.$store.dispatch('getItemsInCart');
+        }).catch( error => {
+          console.log(error);
         });
       },
 
@@ -91,7 +97,7 @@
 
         this.itemsInCart.forEach(item => {
           total += item.price;
-        })
+        });
 
         return this.convertToDollars(total);
       }

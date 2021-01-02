@@ -24,16 +24,6 @@
       return {
         layout: 'div',
       };
-    },
-
-    created: function() {
-      if (localStorage.getItem('auth') === null) {
-        this.$store.dispatch('getItemsInCart');
-      } else {
-        this.$store.dispatch('autoSignIn').then(() => {
-          this.$store.dispatch('getItemsInCart');
-        });
-      }
-    },
+    }
   };
 </script>

@@ -86,13 +86,7 @@
     </v-navigation-drawer>
 
     <v-main>
-      <v-container fluid>
-        <v-row>
-          <v-col cols="12">
-            <slot/>
-          </v-col>
-        </v-row>
-      </v-container>
+      <slot/>
     </v-main>
   </v-app>
 </template>

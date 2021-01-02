@@ -257,10 +257,12 @@ export default new Vuex.Store({
         }
       });
 
-      if (await response.status === 201) {
-        const result = await response.json();
-        console.log(result);
-        // commit('updateCart', { items: result });
+      const result = await response.json();
+
+      if (response.ok) {
+        return result;
+      } else {
+        throw result.error;
       }
     },
   },
