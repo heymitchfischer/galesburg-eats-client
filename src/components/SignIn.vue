@@ -36,6 +36,7 @@
                 <v-btn color="primary" v-on:click="signIn">Sign In</v-btn>
                 <p class="mt-8 mb-0">Don't have an account?</p>
                 <router-link to="/sign_up">Create one here</router-link>
+                <router-link to="/">Or continue as guest</router-link>
               </v-card-actions>
             </v-card>
           </v-col>
@@ -46,38 +47,38 @@
 </template>
 
 <script>
-  const ERROR_MESSAGE = "Please check your email and password.";
+const ERROR_MESSAGE = "Please check your email and password.";
 
-  export default {
-    props: {
-      source: String,
-    },
+export default {
+  props: {
+    source: String,
+  },
 
-    data: function() {
-      return {
-        signInForm: {
-          email: "",
-          password: ""
-        },
+  data: function() {
+    return {
+      signInForm: {
+        email: "",
+        password: ""
+      },
 
-        errorMessage: null
-      }
-    },
+      errorMessage: null
+    }
+  },
 
-    methods: {
-      signIn() {
-        this.errorMessage = null;
+  methods: {
+    signIn() {
+      this.errorMessage = null;
 
-        this.$store.dispatch('signIn', {
-          email: this.signInForm.email,
-          password: this.signInForm.password
-        }).then( () => {
-          this.$store.dispatch('getItemsInCart');
-          this.$router.push({ name: 'Businesses' });
-        }).catch( () => {
-          this.errorMessage = ERROR_MESSAGE;
-        });
-      }
+      this.$store.dispatch('signIn', {
+        email: this.signInForm.email,
+        password: this.signInForm.password
+      }).then( () => {
+        this.$store.dispatch('getItemsInCart');
+        this.$router.push({ name: 'Businesses' });
+      }).catch( () => {
+        this.errorMessage = ERROR_MESSAGE;
+      });
     }
   }
+}
 </script>

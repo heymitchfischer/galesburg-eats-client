@@ -63,61 +63,61 @@
 </style>
 
 <script>
-  import Menu from '@/components/Menu.vue';
-  import Dashboard from '../layouts/Dashboard.vue';
-  import AddItemDialog from '@/components/AddItemDialog.vue'
+import Menu from '@/components/Menu.vue';
+import Dashboard from '../layouts/Dashboard.vue';
+import AddItemDialog from '@/components/AddItemDialog.vue'
 
-  export default {
-    name: 'Business',
+export default {
+  name: 'Business',
 
-    data: () => ({
-      business: {},
-      selectedMenuItem: {},
-      selectedMenu: {}
-    }),
+  data: () => ({
+    business: {},
+    selectedMenuItem: {},
+    selectedMenu: {}
+  }),
 
-    components: {
-      Menu,
-      AddItemDialog
-    },
+  components: {
+    Menu,
+    AddItemDialog
+  },
 
-    created() {
-      this.$emit('update:layout', Dashboard);
-    },
+  created() {
+    this.$emit('update:layout', Dashboard);
+  },
 
-    mounted: async function() {
-      this.business = await this.getBusiness(this.$route.params.slug);
-      this.selectedMenu = this.business.menus[0];
-    },
+  mounted: async function() {
+    this.business = await this.getBusiness(this.$route.params.slug);
+    this.selectedMenu = this.business.menus[0];
+  },
 
-    methods: {
-      getBusiness: async function(slug) {
-        const response = await fetch(`http://localhost:3000/businesses/${slug}`, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json'
-          }
-        });
-
-        if (await response.status === 200) {
-          const result = await response.json();
-          return result;
+  methods: {
+    getBusiness: async function(slug) {
+      const response = await fetch(`${process.env.VUE_APP_API_URL}/businesses/${slug}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
         }
-      },
+      });
 
-      addSelectedMenuItemToCart: function() {
-        console.log(this.selectedMenuItem);
+      if (await response.status === 200) {
+        const result = await response.json();
+        return result;
       }
     },
 
-    computed: {
-      menuItemIsSelected: function() {
-        if (Object.entries(this.selectedMenuItem).length === 0) {
-          return false;
-        }
+    addSelectedMenuItemToCart: function() {
+      console.log(this.selectedMenuItem);
+    }
+  },
 
-        return true;
+  computed: {
+    menuItemIsSelected: function() {
+      if (Object.entries(this.selectedMenuItem).length === 0) {
+        return false;
       }
+
+      return true;
     }
   }
+}
 </script>

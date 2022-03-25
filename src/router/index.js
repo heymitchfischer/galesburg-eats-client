@@ -5,6 +5,9 @@ import Order from '../views/Order.vue'
 import Orders from '../views/Orders.vue'
 import Business from '../views/Business.vue'
 import Businesses from '../views/Businesses.vue'
+import Profile from '../views/Profile.vue'
+import About from '../views/About.vue'
+import Contact from '../views/Contact.vue'
 import store from '../store'
 
 Vue.use(VueRouter)
@@ -49,6 +52,33 @@ const routes = [
     }
   },
   {
+    path: '/profile',
+    name: 'Profile',
+    component: Profile,
+    meta: {
+      requiresAuth: true,
+      requiresGuest: false
+    }
+  },
+  {
+    path: '/about',
+    name: 'About',
+    component: About,
+    meta: {
+      requiresAuth: false,
+      requiresGuest: false
+    }
+  },
+  {
+    path: '/contact',
+    name: 'Contact',
+    component: Contact,
+    meta: {
+      requiresAuth: false,
+      requiresGuest: false
+    }
+  },
+  {
     path: '/',
     name: 'Businesses',
     component: Businesses,
@@ -80,7 +110,7 @@ const router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
   // Attempt auto-sign-in if necessary before moving forward
-  if (store.getters.isLoggedOut && localStorage.getItem('auth')) {
+  if (store.getters.isLoggedOut) {
     store.dispatch('autoSignIn').then(() => {
       if (to.meta.requiresAuth && store.getters.isLoggedOut) {
         next({ path: '/sign_in' });

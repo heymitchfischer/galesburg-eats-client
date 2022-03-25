@@ -14,14 +14,14 @@
 </template>
 
 <script>
-  import MenuItem from '@/components/MenuItem.vue'
+import MenuItem from '@/components/MenuItem.vue'
 
-  export default {
-    props: {
-      menuSection: Object
-    },
-    components: {
-      MenuItem
-    }
+export default {
+  props: {
+    menuSection: Object
+  },
+  components: {
+    MenuItem
   }
+}
 </script>

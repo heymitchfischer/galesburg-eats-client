@@ -74,6 +74,7 @@
                 <v-btn color="primary" v-on:click="signUp">Create Account</v-btn>
                 <p class="mt-8 mb-0">Already have an account?</p>
                 <router-link to="/sign_in">Sign in here</router-link>
+                <router-link to="/">Or continue as guest</router-link>
               </v-card-actions>
             </v-card>
           </v-col>
@@ -84,52 +85,52 @@
 </template>
 
 <script>
-  import { formatErrors } from '@/misc/helpers.js';
+import { formatErrors } from '@/misc/helpers.js';
 
-  export default {
-    props: {
-      source: String,
-    },
+export default {
+  props: {
+    source: String,
+  },
 
-    data: function() {
-      return {
-        signUpForm: {
-          firstName: "",
-          lastName: "",
-          phoneNumber: "",
-          email: "",
-          password: "",
-          passwordConfirmation: ""
-        },
+  data: function() {
+    return {
+      signUpForm: {
+        firstName: "",
+        lastName: "",
+        phoneNumber: "",
+        email: "",
+        password: "",
+        passwordConfirmation: ""
+      },
 
-        errors: {}
-      }
-    },
+      errors: {}
+    }
+  },
 
-    methods: {
-      signUp() {
-        this.errors = {};
+  methods: {
+    signUp() {
+      this.errors = {};
 
-        this.$store.dispatch('signUp', {
-          firstName: this.signUpForm.firstName,
-          lastName: this.signUpForm.lastName,
-          phoneNumber: this.signUpForm.phoneNumber,
-          email: this.signUpForm.email,
-          password: this.signUpForm.password,
-          passwordConfirmation: this.signUpForm.passwordConfirmation
-        }).then( () => {
-          this.$store.dispatch('getItemsInCart');
-          this.$router.push({ name: 'Businesses' });
-        }).catch( errors => {
-          this.errors = errors;
-        });
-      }
-    },
+      this.$store.dispatch('signUp', {
+        firstName: this.signUpForm.firstName,
+        lastName: this.signUpForm.lastName,
+        phoneNumber: this.signUpForm.phoneNumber,
+        email: this.signUpForm.email,
+        password: this.signUpForm.password,
+        passwordConfirmation: this.signUpForm.passwordConfirmation
+      }).then( () => {
+        this.$store.dispatch('getItemsInCart');
+        this.$router.push({ name: 'Businesses' });
+      }).catch( errors => {
+        this.errors = errors;
+      });
+    }
+  },
 
-    computed: {
-      formattedErrors: function() {
-        return formatErrors(this.errors);
-      }
+  computed: {
+    formattedErrors: function() {
+      return formatErrors(this.errors);
     }
   }
+}
 </script>

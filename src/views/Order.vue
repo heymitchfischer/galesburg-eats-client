@@ -52,65 +52,65 @@
 </style>
 
 <script>
-  import Dashboard from '../layouts/Dashboard.vue';
-  import { formatDateTime, convertToDollars } from '@/misc/helpers.js';
+import Dashboard from '../layouts/Dashboard.vue';
+import { formatDateTime, convertToDollars } from '@/misc/helpers.js';
 
-  export default {
-    name: 'Order',
+export default {
+  name: 'Order',
 
-    data: () => ({
-      order: {},
-      loading: true
-    }),
+  data: () => ({
+    order: {},
+    loading: true
+  }),
 
-    created() {
-      this.$emit('update:layout', Dashboard);
-    },
+  created() {
+    this.$emit('update:layout', Dashboard);
+  },
 
-    mounted: async function() {
-      this.getOrder(this.$route.params.orderID).then( order => {
-        this.order = order;
-        this.loading = false;
-      }).catch( error => {
-        console.log(error);
-      });
-    },
+  mounted: async function() {
+    this.getOrder(this.$route.params.orderID).then( order => {
+      this.order = order;
+      this.loading = false;
+    }).catch( error => {
+      console.log(error);
+    });
+  },
 
-    methods: {
-      getOrder: async function(orderID) {
-        const response = await fetch(`http://localhost:3000/orders/${orderID}`, {
-          method: 'GET',
-          credentials: 'include',
-          headers: {
-            'Content-Type': 'application/json',
-            'Jwt-Auth': 'user_web_client',
-            'Authorization': this.$store.state.auth
-          }
-        });
-
-        const result = await response.json();
-
-        if (response.ok) {
-          return result;
-        } else {
-          throw result.error;
+  methods: {
+    getOrder: async function(orderID) {
+      const response = await fetch(`${process.env.VUE_APP_API_URL}/orders/${orderID}`, {
+        method: 'GET',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+          'Jwt-Auth': 'user_web_client',
+          'Authorization': this.$store.state.auth
         }
-      },
+      });
 
-      formatDateTime,
-      convertToDollars
+      const result = await response.json();
+
+      if (response.ok) {
+        return result;
+      } else {
+        throw result.error;
+      }
     },
 
-    computed: {
-      orderTotal: function() {
-        let total = 0;
+    formatDateTime,
+    convertToDollars
+  },
 
-        this.order.carted_items.forEach(item => {
-          total += item.price;
-        })
+  computed: {
+    orderTotal: function() {
+      let total = 0;
 
-        return this.convertToDollars(total);
-      }
+      this.order.carted_items.forEach(item => {
+        total += item.price;
+      })
+
+      return this.convertToDollars(total);
     }
   }
+}
 </script>

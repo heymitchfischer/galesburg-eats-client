@@ -9,7 +9,7 @@
       color="primary"
       class="white--text"
     >
-      <span>Main Street Codes</span>
+      <span>Mitch Fischer</span>
       <v-spacer></v-spacer>
       <span>&copy; {{ new Date().getFullYear() }}</span>
     </v-footer>
@@ -17,13 +17,13 @@
 </template>
 
 <script>
-  export default {
-    name: 'App',
+export default {
+  name: 'App',
 
-    data() {
-      return {
-        layout: 'div',
-      };
-    }
-  };
+  data() {
+    return {
+      layout: 'div',
+    };
+  }
+};
 </script>

@@ -4,6 +4,7 @@
       <v-row>
         <v-col cols="12" align-self="center">
           <v-card-title>{{ menuItem.name }}</v-card-title>
+          <v-card-subtitle>{{ convertToDollars(menuItem.price) }}</v-card-subtitle>
         </v-col>
       </v-row>
     </v-card>
@@ -11,11 +12,14 @@
 </template>
 
 <script>
-  export default {
-    props: {
-      menuItem: Object
-    },
-    methods: {
-    }
+import { convertToDollars } from '@/misc/helpers.js';
+
+export default {
+  props: {
+    menuItem: Object
+  },
+  methods: {
+    convertToDollars
   }
+}
 </script>

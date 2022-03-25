@@ -46,61 +46,61 @@
 </style>
 
 <script>
-  import RemoveItemDialog from '@/components/RemoveItemDialog.vue'
-  import { convertToDollars } from '@/misc/helpers.js';
+import RemoveItemDialog from '@/components/RemoveItemDialog.vue'
+import { convertToDollars } from '@/misc/helpers.js';
 
-  export default {
-    data: () => ({
-      removeItemDialogOpen: false,
-      itemBeingRemoved: {}
-    }),
+export default {
+  data: () => ({
+    removeItemDialogOpen: false,
+    itemBeingRemoved: {}
+  }),
 
-    components: {
-      RemoveItemDialog
+  components: {
+    RemoveItemDialog
+  },
+
+  mounted: function() {
+    this.$store.dispatch('getItemsInCart');
+  },
+
+  methods: {
+    removeFromCart: function(item) {
+      this.removeItemDialogOpen = false;
+      this.itemBeingRemoved = {};
+      this.$store.dispatch('removeItemFromCart', { item: item });
     },
 
-    mounted: function() {
-      this.$store.dispatch('getItemsInCart');
+    checkout: function() {
+      this.$store.dispatch('checkout').then( order => {
+        this.$router.push({ path: `/orders/${order.id}` });
+        this.$store.dispatch('getItemsInCart');
+      }).catch( error => {
+        console.log(error);
+      });
     },
 
-    methods: {
-      removeFromCart: function(item) {
-        this.removeItemDialogOpen = false;
-        this.itemBeingRemoved = {};
-        this.$store.dispatch('removeItemFromCart', { item: item });
-      },
-
-      checkout: function() {
-        this.$store.dispatch('checkout').then( order => {
-          this.$router.push({ path: `/orders/${order.id}` });
-          this.$store.dispatch('getItemsInCart');
-        }).catch( error => {
-          console.log(error);
-        });
-      },
-
-      openRemoveItemDialog: function(item) {
-        this.itemBeingRemoved = item;
-        this.removeItemDialogOpen = true;
-      },
-
-      convertToDollars
+    openRemoveItemDialog: function(item) {
+      this.itemBeingRemoved = item;
+      this.removeItemDialogOpen = true;
     },
 
-    computed: {
-      itemsInCart: function() {
-        return this.$store.state.cart.items;
-      },
+    convertToDollars
+  },
 
-      orderTotal: function() {
-        let total = 0;
-
-        this.itemsInCart.forEach(item => {
-          total += item.price;
-        });
-
-        return this.convertToDollars(total);
-      }
+  computed: {
+    itemsInCart: function() {
+      return this.$store.state.cart.items;
     },
-  }
+
+    orderTotal: function() {
+      let total = 0;
+
+      this.itemsInCart.forEach(item => {
+        total += item.price;
+      });
+
+      return this.convertToDollars(total);
+    }
+  },
+}
 </script>

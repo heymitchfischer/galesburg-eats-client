@@ -47,7 +47,7 @@
           </v-list-item-content>
         </v-list-item>
 
-        <v-list-item @click="$router.push('/')" v-if="$store.getters.isLoggedIn">
+        <v-list-item @click="$router.push('/profile')" v-if="$store.getters.isLoggedIn">
           <v-list-item-action>
             <v-icon>mdi-account</v-icon>
           </v-list-item-action>
@@ -56,21 +56,21 @@
           </v-list-item-content>
         </v-list-item>
 
-        <v-list-item @click="$router.push('/')">
+        <v-list-item @click="$router.push('/contact')">
           <v-list-item-action>
             <v-icon>mdi-email</v-icon>
           </v-list-item-action>
           <v-list-item-content>
-            <v-list-item-title>Contact Us</v-list-item-title>
+            <v-list-item-title>Contact Us (WIP)</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
 
-        <v-list-item @click="$router.push('/')">
+        <v-list-item @click="$router.push('/about')">
           <v-list-item-action>
             <v-icon>mdi-information</v-icon>
           </v-list-item-action>
           <v-list-item-content>
-            <v-list-item-title>About</v-list-item-title>
+            <v-list-item-title>About (WIP)</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
 
@@ -108,40 +108,40 @@
 </style>
 
 <script>
-  import Cart from '@/components/Cart.vue'
+import Cart from '@/components/Cart.vue'
 
-  export default {
-    props: {
-      source: String,
+export default {
+  props: {
+    source: String,
+  },
+
+  data: () => ({
+    drawer: null,
+    drawerRight: null,
+    right: false,
+    left: false
+  }),
+
+  components: {
+    Cart
+  },
+
+  methods: {
+    signOut: function() {
+      this.$store.dispatch('signOut').then(() => {
+        this.$router.push({ name: 'Sign In' });
+      });
+    }
+  },
+
+  computed: {
+    businessSelected: function() {
+      return Object.keys(this.business).length !== 0;
     },
 
-    data: () => ({
-      drawer: null,
-      drawerRight: null,
-      right: false,
-      left: false
-    }),
-
-    components: {
-      Cart
-    },
-
-    methods: {
-      signOut: function() {
-        this.$store.dispatch('signOut').then(() => {
-          this.$router.push({ name: 'Sign In' });
-        });
-      }
-    },
-
-    computed: {
-      businessSelected: function() {
-        return Object.keys(this.business).length !== 0;
-      },
-
-      amountOfItemsInCart: function() {
-        return this.$store.state.cart.items.length;
-      }
+    amountOfItemsInCart: function() {
+      return this.$store.state.cart.items.length;
     }
   }
+}
 </script>

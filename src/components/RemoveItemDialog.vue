@@ -38,27 +38,27 @@
 </template>
 
 <script>
-  export default {
-    props: {
-      open: Boolean,
-      item: Object
+export default {
+  props: {
+    open: Boolean,
+    item: Object
+  },
+
+  methods: {
+    close: function() {
+      this.$emit('input', false);
     },
 
-    methods: {
-      close: function() {
-        this.$emit('input', false);
-      },
-
-      remove: function() {
-        this.$emit('remove', this.item);
-      }
-    },
-
-    computed: {
-      dialogOpen: {
-        get () { return this.open },
-        set (value) { this.$emit('input', value) },
-      },
+    remove: function() {
+      this.$emit('remove', this.item);
     }
+  },
+
+  computed: {
+    dialogOpen: {
+      get () { return this.open },
+      set (value) { this.$emit('input', value) },
+    },
   }
+}
 </script>

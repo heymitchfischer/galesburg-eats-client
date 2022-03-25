@@ -1,24 +1,18 @@
-# galesburg-eats-client
+# Galesburg Eats Client
 
-## Project setup
+Find the API repo here: https://github.com/heymitchfischer/galesburg-eats-api
+
+## Getting Started
+
+### With Docker (Recommended)
+First, follow [these instructions](https://docs.docker.com/get-docker/) to install Docker Desktop if don't have it installed. Make sure you have the Docker Desktop application started, then run the following:
+```
+docker-compose build
+docker-compose up
+```
+
+### Bare Metal
 ```
 npm install
-```
-
-### Compiles and hot-reloads for development
-```
 npm run serve
 ```
-
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).

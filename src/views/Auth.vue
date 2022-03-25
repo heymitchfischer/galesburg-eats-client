@@ -12,21 +12,21 @@ import SignUp from '@/components/SignUp.vue';
 import Default from '../layouts/Default.vue';
 
 export default {
-  name: 'Auth',
+name: 'Auth',
 
-  created() {
-    this.$emit('update:layout', Default);
-  },
+created() {
+  this.$emit('update:layout', Default);
+},
 
-  computed: {
-    isSignIn() {
-      return this.$route.name === 'Sign In'
-    }
-  },
-
-  components: {
-    SignIn,
-    SignUp
+computed: {
+  isSignIn() {
+    return this.$route.name === 'Sign In'
   }
+},
+
+components: {
+  SignIn,
+  SignUp
+}
 }
 </script>

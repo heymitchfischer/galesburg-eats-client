@@ -39,60 +39,60 @@
 </style>
 
 <script>
-  import Dashboard from '../layouts/Dashboard.vue';
-  import { formatDateTime, convertToDollars } from '@/misc/helpers.js';
+import Dashboard from '../layouts/Dashboard.vue';
+import { formatDateTime, convertToDollars } from '@/misc/helpers.js';
 
-  export default {
-    name: 'Orders',
+export default {
+  name: 'Orders',
 
-    data: () => ({
-      orders: []
-    }),
+  data: () => ({
+    orders: []
+  }),
 
-    created() {
-      this.$emit('update:layout', Dashboard);
-    },
+  created() {
+    this.$emit('update:layout', Dashboard);
+  },
 
-    mounted: async function() {
-      this.orders = await this.getOrders();
-    },
+  mounted: async function() {
+    this.orders = await this.getOrders();
+  },
 
-    methods: {
-      getOrders: async function() {
-        const response = await fetch('http://localhost:3000/orders', {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-            'Jwt-Auth': 'user_web_client',
-            'Authorization': this.$store.state.auth
-          }
-        });
-
-        const result = await response.json();
-
-        if (response.ok) {
-          return result;
-        } else {
-          throw result.error;
+  methods: {
+    getOrders: async function() {
+      const response = await fetch(`${process.env.VUE_APP_API_URL}/orders`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Jwt-Auth': 'user_web_client',
+          'Authorization': this.$store.state.auth
         }
-      },
+      });
 
-      moveToOrder: async function(orderID) {
-        this.$router.push({ path: `/orders/${orderID}` });
-      },
+      const result = await response.json();
 
-      computeOrderTotal: function(order) {
-        let total = 0;
+      if (response.ok) {
+        return result;
+      } else {
+        throw result.error;
+      }
+    },
 
-        order.carted_items.forEach(item => {
-          total += item.price;
-        })
+    moveToOrder: async function(orderID) {
+      this.$router.push({ path: `/orders/${orderID}` });
+    },
 
-        return this.convertToDollars(total);
-      },
+    computeOrderTotal: function(order) {
+      let total = 0;
 
-      formatDateTime,
-      convertToDollars
-    }
+      order.carted_items.forEach(item => {
+        total += item.price;
+      })
+
+      return this.convertToDollars(total);
+    },
+
+    formatDateTime,
+    convertToDollars
   }
+}
 </script>

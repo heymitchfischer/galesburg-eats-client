@@ -48,64 +48,64 @@
 </style>
 
 <script>
-  import { convertToDollars } from '@/misc/helpers.js';
+import { convertToDollars } from '@/misc/helpers.js';
 
-  const CART_ERROR_MESSAGES = {
-    new_item_business_id_does_not_match: 'You have started an order with a different business. Remove your current items or checkout first before starting a new order.'
-  }
+const CART_ERROR_MESSAGES = {
+  new_item_business_id_does_not_match: 'You have started an order with a different business. Remove your current items or checkout first before starting a new order.'
+}
 
-  const DEFAULT_CART_ERROR_MESSAGE = 'Something isn\'t working correctly. We\'re looking into it.';
+const DEFAULT_CART_ERROR_MESSAGE = 'Something isn\'t working correctly. We\'re looking into it.';
 
-  export default {
-    props: {
-      open: Boolean,
-      item: Object
+export default {
+  props: {
+    open: Boolean,
+    item: Object
+  },
+
+  data: () => ({
+    errorMessage: null
+  }),
+
+  watch: {
+    open: function () {
+      this.errorMessage = null;
+    }
+  },
+
+  methods: {
+    close: function() {
+      this.$emit('input', false);
     },
 
-    data: () => ({
-      errorMessage: null
-    }),
+    add: async function() {
+      this.errorMessage = null;
 
-    watch: {
-      open: function () {
-        this.errorMessage = null;
+      try {
+        await this.$store.dispatch('addItemToCart', { item: this.item });
+        this.close();
+      } catch(error) {
+        this.errorMessage = this.findErrorMessage(error);
       }
     },
 
-    methods: {
-      close: function() {
-        this.$emit('input', false);
-      },
+    findErrorMessage: function(error) {
+      let message = CART_ERROR_MESSAGES[error];
 
-      add: async function() {
-        this.errorMessage = null;
+      if (message) {
+        return message;
+      }
 
-        try {
-          await this.$store.dispatch('addItemToCart', { item: this.item });
-          this.close();
-        } catch(error) {
-          this.errorMessage = this.findErrorMessage(error);
-        }
-      },
-
-      findErrorMessage: function(error) {
-        let message = CART_ERROR_MESSAGES[error];
-
-        if (message) {
-          return message;
-        }
-
-        return DEFAULT_CART_ERROR_MESSAGE;
-      },
-
-      convertToDollars
+      return DEFAULT_CART_ERROR_MESSAGE;
     },
 
-    computed: {
-      dialogOpen: {
-        get () { return this.open },
-        set (value) { this.$emit('input', value) },
-      },
-    }
+    convertToDollars
+  },
+
+  computed: {
+    dialogOpen: {
+      get () { return this.open },
+      set (value) { this.$emit('input', value) },
+    },
   }
+}
 </script>

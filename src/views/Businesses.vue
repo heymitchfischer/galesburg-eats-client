@@ -54,41 +54,41 @@
 </style>
 
 <script>
-  import Dashboard from '../layouts/Dashboard.vue';
+import Dashboard from '../layouts/Dashboard.vue';
 
-  export default {
-    name: 'Businesses',
+export default {
+  name: 'Businesses',
 
-    data: () => ({
-      businesses: []
-    }),
+  data: () => ({
+    businesses: []
+  }),
 
-    created() {
-      this.$emit('update:layout', Dashboard);
+  created() {
+    this.$emit('update:layout', Dashboard);
+  },
+
+  mounted: async function() {
+    this.businesses = await this.getBusinesses();
+  },
+
+  methods: {
+    moveToBusiness: async function(business) {
+      this.$router.push({ path: `/${business.slug}` });
     },
 
-    mounted: async function() {
-      this.businesses = await this.getBusinesses();
-    },
-
-    methods: {
-      moveToBusiness: async function(business) {
-        this.$router.push({ path: `/${business.slug}` });
-      },
-
-      getBusinesses: async function() {
-        const response = await fetch('http://localhost:3000/businesses', {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json'
-          }
-        });
-
-        if (await response.status === 200) {
-          const result = await response.json();
-          return result;
+    getBusinesses: async function() {
+      const response = await fetch(`${process.env.VUE_APP_API_URL}/businesses`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
         }
+      });
+
+      if (await response.status === 200) {
+        const result = await response.json();
+        return result;
       }
     }
   }
+}
 </script>
